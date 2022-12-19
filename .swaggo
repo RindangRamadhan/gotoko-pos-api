@@ -1,0 +1,4 @@
+// Use global overrides to support a custom type
+replace github.com/guregu/null.Int integer
+replace github.com/guregu/null.Float number
+replace github.com/guregu/null.String string

@@ -1,0 +1,52 @@
+definitions:
+  health.InportResponse:
+    properties:
+      mysql:
+        type: boolean
+      name:
+        type: string
+      version:
+        type: string
+    type: object
+  response.BodySuccess:
+    properties:
+      message:
+        type: string
+      status:
+        type: boolean
+    type: object
+info:
+  contact:
+    email: rindangramadhan10@gmail.com
+    name: Developer
+paths:
+  /:
+    get:
+      consumes:
+      - application/json
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.BodySuccess'
+            - properties:
+                data:
+                  $ref: '#/definitions/health.InportResponse'
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.BodySuccess'
+      summary: Health Check
+      tags:
+      - Health-Check
+securityDefinitions:
+  JWTBearer:
+    description: Token for access api
+    in: header
+    name: Authorization
+    type: apiKey
+swagger: "2.0"
