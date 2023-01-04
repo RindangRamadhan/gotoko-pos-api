@@ -1,7 +1,7 @@
 package constant
 
 const (
-	ErrorMessageKey  string = "error"
-	ThreadIDKey      string = "threadID"
-	HeaderXRequestID string = "X-Request-ID"
+	ErrorMessageKey  = "error"
+	ThreadIDKey      = "threadID"
+	HeaderXRequestID = "X-Request-ID"
 )

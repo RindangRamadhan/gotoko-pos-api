@@ -69,7 +69,7 @@ func TDRLog() gin.HandlerFunc {
 		tdr := logger.LogTDRModel{
 			XTime:         time.Now().Format(time.RFC3339),
 			Method:        c.Request.Method,
-			AppName:       "GoTok-POS-API",
+			AppName:       "GoToko-POS-API",
 			AppVersion:    "0.0",
 			IP:            "localhost",
 			Port:          os.Getenv("PORT"),

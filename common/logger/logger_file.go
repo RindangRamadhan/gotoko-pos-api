@@ -2,7 +2,6 @@ package logger
 
 import (
 	"context"
-	"fmt"
 	"os"
 	"time"
 
@@ -19,8 +18,6 @@ type logger struct {
 var _ Logger = (*logger)(nil)
 
 func New() Logger {
-	fmt.Println("Try newLogger ...")
-
 	config := zap.NewDevelopmentConfig()
 	if os.Getenv("ENV") == "prod" || os.Getenv("ENV") == "production" {
 		config = zap.NewProductionConfig()
