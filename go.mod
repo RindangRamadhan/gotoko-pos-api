@@ -10,10 +10,8 @@ require (
 	github.com/go-playground/universal-translator v0.18.0
 	github.com/go-playground/validator/v10 v10.11.1
 	github.com/go-sql-driver/mysql v1.7.0
-	github.com/gojek/heimdall v5.0.2+incompatible
 	github.com/gojek/heimdall/v7 v7.0.2
 	github.com/google/uuid v1.3.0
-	github.com/guregu/null v4.0.0+incompatible
 	github.com/jmoiron/sqlx v1.3.5
 	github.com/rs/cors/wrapper/gin v0.0.0-20221003140808-fcebdb403f4d
 	github.com/spf13/cast v1.5.0
