@@ -1,4 +1,59 @@
 definitions:
+  createcashier.InportRequest:
+    properties:
+      name:
+        type: string
+      passcode:
+        type: string
+    required:
+    - name
+    - passcode
+    type: object
+  createcashier.InportResponse:
+    properties:
+      cashierId:
+        example: 1
+        type: integer
+      createdAt:
+        example: "2022-04-23T18:25:43.511Z"
+        type: string
+      name:
+        example: Kasir 1
+        type: string
+      passcode:
+        example: "123456"
+        type: string
+      updatedAt:
+        example: "2022-04-23T18:25:43.511Z"
+        type: string
+    type: object
+  getcashier.GetCashierResponse:
+    properties:
+      cashierId:
+        example: 1
+        type: integer
+      name:
+        example: Kasir 1
+        type: string
+    type: object
+  getcashier.InportResponse:
+    properties:
+      cashiers:
+        items:
+          $ref: '#/definitions/getcashier.GetCashierResponse'
+        type: array
+      meta:
+        $ref: '#/definitions/response.MetaTpl'
+    type: object
+  getcashierdetail.InportResponse:
+    properties:
+      cashierId:
+        example: 1
+        type: integer
+      name:
+        example: Kasir 1
+        type: string
+    type: object
   health.InportResponse:
     properties:
       mysql:
@@ -8,12 +63,38 @@ definitions:
       version:
         type: string
     type: object
+  response.BodyFailure:
+    properties:
+      message:
+        type: string
+      success:
+        type: boolean
+    type: object
   response.BodySuccess:
     properties:
       message:
         type: string
-      status:
+      success:
         type: boolean
+    type: object
+  response.MetaTpl:
+    properties:
+      limit:
+        type: integer
+      skip:
+        type: integer
+      total:
+        type: integer
+    type: object
+  updatecashier.InportRequest:
+    properties:
+      name:
+        type: string
+      passcode:
+        type: string
+    required:
+    - name
+    - passcode
     type: object
 info:
   contact:
@@ -39,10 +120,164 @@ paths:
         "500":
           description: Internal Server Error
           schema:
-            $ref: '#/definitions/response.BodySuccess'
+            $ref: '#/definitions/response.BodyFailure'
       summary: Health Check
       tags:
-      - Health-Check
+      - Health Check
+  /cashiers:
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Page Number
+        in: query
+        name: skip
+        required: true
+        type: integer
+      - description: Limit Display
+        in: query
+        name: limit
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.BodySuccess'
+            - properties:
+                data:
+                  $ref: '#/definitions/getcashier.InportResponse'
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.BodyFailure'
+      security:
+      - JWTBearer: []
+      summary: Get list of cashiers
+      tags:
+      - Cashier
+    post:
+      consumes:
+      - application/json
+      parameters:
+      - description: Payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/createcashier.InportRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.BodySuccess'
+            - properties:
+                data:
+                  $ref: '#/definitions/createcashier.InportResponse'
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.BodyFailure'
+      security:
+      - JWTBearer: []
+      summary: Create a new cashier
+      tags:
+      - Cashier
+  /cashiers/{id}:
+    delete:
+      consumes:
+      - application/json
+      parameters:
+      - description: Cashier Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.BodySuccess'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.BodyFailure'
+      security:
+      - JWTBearer: []
+      summary: Delete cashier
+      tags:
+      - Cashier
+    get:
+      consumes:
+      - application/json
+      parameters:
+      - description: Cashier Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/response.BodySuccess'
+            - properties:
+                data:
+                  $ref: '#/definitions/getcashierdetail.InportResponse'
+              type: object
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.BodyFailure'
+      security:
+      - JWTBearer: []
+      summary: Get cashier detail
+      tags:
+      - Cashier
+    put:
+      consumes:
+      - application/json
+      parameters:
+      - description: Cashier Id
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Payload
+        in: body
+        name: payload
+        required: true
+        schema:
+          $ref: '#/definitions/updatecashier.InportRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            $ref: '#/definitions/response.BodySuccess'
+        "500":
+          description: Internal Server Error
+          schema:
+            $ref: '#/definitions/response.BodyFailure'
+      security:
+      - JWTBearer: []
+      summary: Update existing cashier
+      tags:
+      - Cashier
 securityDefinitions:
   JWTBearer:
     description: Token for access api

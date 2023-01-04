@@ -28,7 +28,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "Health-Check"
+                    "Health Check"
                 ],
                 "summary": "Health Check",
                 "responses": {
@@ -53,7 +53,265 @@ const docTemplate = `{
                     "500": {
                         "description": "Internal Server Error",
                         "schema": {
+                            "$ref": "#/definitions/response.BodyFailure"
+                        }
+                    }
+                }
+            }
+        },
+        "/cashiers": {
+            "get": {
+                "security": [
+                    {
+                        "JWTBearer": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Cashier"
+                ],
+                "summary": "Get list of cashiers",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Page Number",
+                        "name": "skip",
+                        "in": "query",
+                        "required": true
+                    },
+                    {
+                        "type": "integer",
+                        "description": "Limit Display",
+                        "name": "limit",
+                        "in": "query",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.BodySuccess"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/getcashier.InportResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.BodyFailure"
+                        }
+                    }
+                }
+            },
+            "post": {
+                "security": [
+                    {
+                        "JWTBearer": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Cashier"
+                ],
+                "summary": "Create a new cashier",
+                "parameters": [
+                    {
+                        "description": "Payload",
+                        "name": "payload",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/createcashier.InportRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.BodySuccess"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/createcashier.InportResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.BodyFailure"
+                        }
+                    }
+                }
+            }
+        },
+        "/cashiers/{id}": {
+            "get": {
+                "security": [
+                    {
+                        "JWTBearer": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Cashier"
+                ],
+                "summary": "Get cashier detail",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Cashier Id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/response.BodySuccess"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/getcashierdetail.InportResponse"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.BodyFailure"
+                        }
+                    }
+                }
+            },
+            "put": {
+                "security": [
+                    {
+                        "JWTBearer": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Cashier"
+                ],
+                "summary": "Update existing cashier",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Cashier Id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    },
+                    {
+                        "description": "Payload",
+                        "name": "payload",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/updatecashier.InportRequest"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
                             "$ref": "#/definitions/response.BodySuccess"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.BodyFailure"
+                        }
+                    }
+                }
+            },
+            "delete": {
+                "security": [
+                    {
+                        "JWTBearer": []
+                    }
+                ],
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Cashier"
+                ],
+                "summary": "Delete cashier",
+                "parameters": [
+                    {
+                        "type": "integer",
+                        "description": "Cashier Id",
+                        "name": "id",
+                        "in": "path",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "$ref": "#/definitions/response.BodySuccess"
+                        }
+                    },
+                    "500": {
+                        "description": "Internal Server Error",
+                        "schema": {
+                            "$ref": "#/definitions/response.BodyFailure"
                         }
                     }
                 }
@@ -61,6 +319,86 @@ const docTemplate = `{
         }
     },
     "definitions": {
+        "createcashier.InportRequest": {
+            "type": "object",
+            "required": [
+                "name",
+                "passcode"
+            ],
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "passcode": {
+                    "type": "string"
+                }
+            }
+        },
+        "createcashier.InportResponse": {
+            "type": "object",
+            "properties": {
+                "cashierId": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "createdAt": {
+                    "type": "string",
+                    "example": "2022-04-23T18:25:43.511Z"
+                },
+                "name": {
+                    "type": "string",
+                    "example": "Kasir 1"
+                },
+                "passcode": {
+                    "type": "string",
+                    "example": "123456"
+                },
+                "updatedAt": {
+                    "type": "string",
+                    "example": "2022-04-23T18:25:43.511Z"
+                }
+            }
+        },
+        "getcashier.GetCashierResponse": {
+            "type": "object",
+            "properties": {
+                "cashierId": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "name": {
+                    "type": "string",
+                    "example": "Kasir 1"
+                }
+            }
+        },
+        "getcashier.InportResponse": {
+            "type": "object",
+            "properties": {
+                "cashiers": {
+                    "type": "array",
+                    "items": {
+                        "$ref": "#/definitions/getcashier.GetCashierResponse"
+                    }
+                },
+                "meta": {
+                    "$ref": "#/definitions/response.MetaTpl"
+                }
+            }
+        },
+        "getcashierdetail.InportResponse": {
+            "type": "object",
+            "properties": {
+                "cashierId": {
+                    "type": "integer",
+                    "example": 1
+                },
+                "name": {
+                    "type": "string",
+                    "example": "Kasir 1"
+                }
+            }
+        },
         "health.InportResponse": {
             "type": "object",
             "properties": {
@@ -75,14 +413,54 @@ const docTemplate = `{
                 }
             }
         },
+        "response.BodyFailure": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                },
+                "success": {
+                    "type": "boolean"
+                }
+            }
+        },
         "response.BodySuccess": {
             "type": "object",
             "properties": {
                 "message": {
                     "type": "string"
                 },
-                "status": {
+                "success": {
                     "type": "boolean"
+                }
+            }
+        },
+        "response.MetaTpl": {
+            "type": "object",
+            "properties": {
+                "limit": {
+                    "type": "integer"
+                },
+                "skip": {
+                    "type": "integer"
+                },
+                "total": {
+                    "type": "integer"
+                }
+            }
+        },
+        "updatecashier.InportRequest": {
+            "type": "object",
+            "required": [
+                "name",
+                "passcode"
+            ],
+            "properties": {
+                "name": {
+                    "type": "string"
+                },
+                "passcode": {
+                    "type": "string"
                 }
             }
         }
