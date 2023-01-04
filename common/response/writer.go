@@ -1,13 +1,18 @@
 package response
 
 import (
+	"fmt"
 	"net/http"
 	"strings"
+
+	"gotoko-pos-api/common/constant"
+	"gotoko-pos-api/common/errors"
+	"gotoko-pos-api/common/logger"
 
 	"github.com/gin-gonic/gin"
 	"github.com/go-playground/validator/v10"
 
-	helpervalidator "gotoko-pos-api/common/validator"
+	commvalidator "gotoko-pos-api/common/validator"
 )
 
 type (
@@ -19,22 +24,21 @@ type (
 	ValidationErrors []ValidationError
 
 	MetaTpl struct {
-		Page      int `json:"page"`
-		Limit     int `json:"limit"`
-		TotalData int `json:"total_data"`
+		Total int `json:"total"`
+		Limit int `json:"limit"`
+		Skip  int `json:"skip"`
 	}
 
 	Body struct {
-		Status  bool        `json:"status"`
+		Success bool        `json:"success"`
 		Message string      `json:"message"`
 		Data    interface{} `json:"data,omitempty"`
 		Error   interface{} `json:"errors,omitempty"`
-		Meta    *MetaTpl    `json:"meta,omitempty"`
 	}
 
 	// Used for swagger response body
 	BodySuccess struct {
-		Status  bool        `json:"status"`
+		Success bool        `json:"success"`
 		Message string      `json:"message"`
 		Data    interface{} `json:"-"`
 		Meta    *MetaTpl    `json:"-"`
@@ -42,45 +46,52 @@ type (
 
 	// Used for swagger response body
 	BodyFailure struct {
-		Status  bool              `json:"status"`
+		Success bool              `json:"success"`
 		Message string            `json:"message"`
 		Errors  []ValidationError `json:"-"`
 	}
 )
 
-func WriteSuccess(c *gin.Context, message string, data interface{}, meta *MetaTpl) {
+func WriteSuccess(c *gin.Context, message string, data interface{}) {
 	c.JSON(http.StatusOK, Body{
-		Status:  true,
+		Success: true,
 		Message: message,
 		Data:    data,
-		Meta:    meta,
 	})
 }
 
-func WriteError(c *gin.Context, code int, err interface{}) {
-	var errors ValidationErrors
-	var body = Body{
-		Status:  false,
-		Message: http.StatusText(code),
+func WriteError(c *gin.Context, logMessage string, err error) {
+	var errVal ValidationErrors
+
+	logger.Error(c, logMessage, err, logger.GetCallerTrace())
+
+	c.Set(constant.ErrorMessageKey, err.Error())
+
+	httpStatusCode := http.StatusInternalServerError
+	payload := Body{
+		Error:   errors.ErrorCodeGeneralError,
+		Success: false,
+		Message: fmt.Sprintf("fatal error: %s", err.Error()),
 	}
 
 	switch e := err.(type) {
 	case validator.ValidationErrors:
-		trans, _ := helpervalidator.GetTranslator("en")
+		trans, _ := commvalidator.GetTranslator("en")
 
 		for _, v := range e {
-			errors = append(errors, ValidationError{
+			errVal = append(errVal, ValidationError{
 				Field:   strings.ToLower(v.Field()),
 				Message: strings.Replace(v.Translate(trans), "_", " ", 1),
 			})
 		}
 
-		body.Error = errors
-	case error:
-		body.Message = e.Error()
-	default:
-		body.Error = err
+		payload.Error = errVal
+		payload.Message = http.StatusText(http.StatusBadRequest)
+	case (*errors.Err):
+		payload.Message = e.Error()
+		payload.Error = e.GetErrorCode()
+		httpStatusCode = e.GetHttpStatusCode()
 	}
 
-	c.JSON(code, body)
+	c.JSON(httpStatusCode, payload)
 }
