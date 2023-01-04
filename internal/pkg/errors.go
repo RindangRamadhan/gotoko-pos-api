@@ -20,7 +20,8 @@ var (
 	ErrFatalQuery = errors.New("fatal query error")
 	ErrJSONParse  = errors.New("an error occurred in the input parameter")
 
-	ErrCashierNotFound = errors.New("cashier not found")
+	ErrCashierNotFound  = errors.New("cashier not found")
+	ErrCategoryNotFound = errors.New("category not found")
 )
 
 func FormatErrorToCommonError(err error) *commonerror.Err {
@@ -45,6 +46,7 @@ func FormatErrorToCommonError(err error) *commonerror.Err {
 	// NOT FOUND
 	ErrDataNotFound := []error{
 		ErrCashierNotFound,
+		ErrCategoryNotFound,
 	}
 
 	if ErrorContains(ErrDataNotFound, err) {

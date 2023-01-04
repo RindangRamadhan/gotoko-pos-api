@@ -4,11 +4,17 @@ import (
 	"gotoko-pos-api/internal/pkg"
 	"gotoko-pos-api/internal/pkg/env"
 	"gotoko-pos-api/internal/repositories/cashier"
+	"gotoko-pos-api/internal/repositories/category"
 	"gotoko-pos-api/internal/usecases/cashier/createcashier"
 	"gotoko-pos-api/internal/usecases/cashier/deletecashier"
 	"gotoko-pos-api/internal/usecases/cashier/getcashier"
 	"gotoko-pos-api/internal/usecases/cashier/getcashierdetail"
 	"gotoko-pos-api/internal/usecases/cashier/updatecashier"
+	"gotoko-pos-api/internal/usecases/category/createcategory"
+	"gotoko-pos-api/internal/usecases/category/deletecategory"
+	"gotoko-pos-api/internal/usecases/category/getcategory"
+	"gotoko-pos-api/internal/usecases/category/getcategorydetail"
+	"gotoko-pos-api/internal/usecases/category/updatecategory"
 	"gotoko-pos-api/internal/usecases/health"
 )
 
@@ -20,6 +26,12 @@ type Container struct {
 	CreateCashierUsecase    createcashier.Inport
 	UpdateCashierUsecase    updatecashier.Inport
 	DeleteCashierUsecase    deletecashier.Inport
+
+	GetCategoryUsecase       getcategory.Inport
+	GetCategoryDetailUsecase getcategorydetail.Inport
+	CreateCategoryUsecase    createcategory.Inport
+	UpdateCategoryUsecase    updatecategory.Inport
+	DeleteCategoryUsecase    deletecategory.Inport
 }
 
 func NewContainer() *Container {
@@ -37,6 +49,7 @@ func NewContainer() *Container {
 
 	// Repo for query related
 	cashierRepo := cashier.NewRepo(dbClient)
+	categoryRepo := category.NewRepo(dbClient)
 
 	return &Container{
 		HealthCheckUsecase: health.NewUsecase(dbClient),
@@ -46,5 +59,11 @@ func NewContainer() *Container {
 		CreateCashierUsecase:    createcashier.NewUsecase(cashierRepo),
 		UpdateCashierUsecase:    updatecashier.NewUsecase(cashierRepo),
 		DeleteCashierUsecase:    deletecashier.NewUsecase(cashierRepo),
+
+		GetCategoryUsecase:       getcategory.NewUsecase(categoryRepo),
+		GetCategoryDetailUsecase: getcategorydetail.NewUsecase(categoryRepo),
+		CreateCategoryUsecase:    createcategory.NewUsecase(categoryRepo),
+		UpdateCategoryUsecase:    updatecategory.NewUsecase(categoryRepo),
+		DeleteCategoryUsecase:    deletecategory.NewUsecase(categoryRepo),
 	}
 }

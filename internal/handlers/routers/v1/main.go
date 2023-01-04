@@ -3,6 +3,7 @@ package v1
 import (
 	"gotoko-pos-api/internal"
 	"gotoko-pos-api/internal/handlers/cashier"
+	"gotoko-pos-api/internal/handlers/category"
 
 	"github.com/gin-gonic/gin"
 
@@ -50,6 +51,31 @@ func Paths(container *internal.Container) []RoutePath {
 		{
 			Method: "DELETE", Group: "", Pattern: "/cashiers/:id", Handlers: []gin.HandlerFunc{
 				cashier.DeleteCashierHandler(container.DeleteCashierUsecase),
+			},
+		},
+		{
+			Method: "GET", Group: "", Pattern: "/categories", Handlers: []gin.HandlerFunc{
+				category.GetCategoryHandler(container.GetCategoryUsecase),
+			},
+		},
+		{
+			Method: "GET", Group: "", Pattern: "/categories/:id", Handlers: []gin.HandlerFunc{
+				category.GetCategoryDetailHandler(container.GetCategoryDetailUsecase),
+			},
+		},
+		{
+			Method: "POST", Group: "", Pattern: "/categories", Handlers: []gin.HandlerFunc{
+				category.CreateCategoryHandler(container.CreateCategoryUsecase),
+			},
+		},
+		{
+			Method: "PUT", Group: "", Pattern: "/categories/:id", Handlers: []gin.HandlerFunc{
+				category.UpdateCategoryHandler(container.UpdateCategoryUsecase),
+			},
+		},
+		{
+			Method: "DELETE", Group: "", Pattern: "/categories/:id", Handlers: []gin.HandlerFunc{
+				category.DeleteCategoryHandler(container.DeleteCategoryUsecase),
 			},
 		},
 	}
